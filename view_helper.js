@@ -149,6 +149,13 @@ function define_single_select_list(id_prefix, on_selection_change = function(sel
 function define_new_effective_permissions(id_prefix, add_info_col = false, which_permissions = null){
     // Set up the table:
     let effective_container = $(`<div id="${id_prefix}" class="ui-widget-content" style="overflow-y:scroll"></div>`)
+
+    // To display what path the user has selected
+    let path_container = $(`<div class="ui-widget-content" id="path_info"></div>`)
+    let path_text = $(`<p id="path_text">Select a folder or file.</p>`)
+
+    effective_container.append(path_container)
+    path_container.append(path_text)
     
     // If no subset of permissions is passed in, use all of them.
     if(which_permissions === null) {
@@ -158,7 +165,7 @@ function define_new_effective_permissions(id_prefix, add_info_col = false, which
     for(let p of which_permissions) {
         let p_id = p.replace(/[ \/]/g, '_') //get jquery-readable id
         let row = $(`
-        <tr id="${id_prefix}_row_${p_id}" permission_name="${p}" permission_id="${p_id}">
+        <tr class="permission_row" id="${id_prefix}_row_${p_id}" permission_name="${p}" permission_id="${p_id}">
             <td id="${id_prefix}_checkcell_${p_id}" class="effectivecheckcell" width="16px"></td>
             <td id="${id_prefix}_name_${p_id}" class="effective_perm_name">${p}</td>
         </tr>
@@ -178,6 +185,13 @@ function define_new_effective_permissions(id_prefix, add_info_col = false, which
         // get current settings:
         let username = effective_container.attr('username')
         let filepath = effective_container.attr('filepath')
+
+        if(filepath != undefined) {
+            $('#path_text').text('File path: ' + filepath);
+        } else {
+            $('#path_text').text('Select a folder or file.');
+        }
+        
         // if both properties are set correctly:
         if( username && username.length > 0 && (username in all_users) &&
             filepath && filepath.length > 0 && (filepath in path_to_file)) {

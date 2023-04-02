@@ -1,5 +1,27 @@
-// ---- Define your dialogs  and panels here ----
+// ---- Define your dialogs and panels here ----
+// sidepanel setup
+let panel = define_new_effective_permissions("panel_id", add_info_col = true)
+let user_sel = define_new_user_select_field("user_id", "Select User", on_user_change = function(selected_user)
+{
+    $('#panel_id').attr('username', selected_user)
+})
 
+$('#sidepanel').append(user_sel)
+$('#sidepanel').append(panel)
+
+// dialog box for info icon
+let dialog = define_new_dialog("dialog_id", title='Permission Info')
+$('.perm_info').click(function(){
+    $('#dialog_id').dialog('open')
+
+    file_obj = path_to_file[$('#panel_id').attr('filepath')]
+    user_obj = all_users[$('#panel_id').attr('username')]
+    perm_name = $(this).attr('permission_name')
+
+    let explanation_obj = allow_user_action(file_obj, user_obj, perm_name, explain_why = true)
+    let explanation_text = get_explanation_text(explanation_obj)
+    $('#dialog_id').text(explanation_text)
+})
 
 
 // ---- Display file structure ----
@@ -10,7 +32,7 @@ function make_file_element(file_obj) {
 
     if(file_obj.is_folder) {
         let folder_elem = $(`<div class='folder' id="${file_hash}_div">
-            <h3 id="${file_hash}_header">
+            <h3 class="selection" id="${file_hash}_header">
                 <span class="oi oi-folder" id="${file_hash}_icon"/> ${file_obj.filename} 
                 <button class="ui-button ui-widget ui-corner-all permbutton" path="${file_hash}" id="${file_hash}_permbutton"> 
                     <span class="oi oi-lock-unlocked" id="${file_hash}_permicon"/> 
@@ -30,7 +52,7 @@ function make_file_element(file_obj) {
         return folder_elem
     }
     else {
-        return $(`<div class='file'  id="${file_hash}_div">
+        return $(`<div class='file selection'  id="${file_hash}_div">
             <span class="oi oi-file" id="${file_hash}_icon"/> ${file_obj.filename}
             <button class="ui-button ui-widget ui-corner-all permbutton" path="${file_hash}" id="${file_hash}_permbutton"> 
                 <span class="oi oi-lock-unlocked" id="${file_hash}_permicon"/> 
@@ -44,6 +66,16 @@ for(let root_file of root_files) {
     $( "#filestructure" ).append( file_elem);    
 }
 
+let $cols = $('.selection').click(function(e) {
+    $cols.removeClass('selected')
+    $(this).addClass('selected')
+
+    let path_id = $(this).attr('id');
+    let matches = path_id.match(/[_]\w{3,6}$/)
+    let path = path_id.replace(matches[0],'')
+
+    $('#panel_id').attr('filepath', path)
+});
 
 
 // make folder hierarchy into an accordion structure
