@@ -39,13 +39,24 @@
 /* Added css */
 #path_info {
     padding: 0.25em;
+    background-color: #007fff;
+    color: white;
 }
 
-.selected, #path_info {
+.selected {
     background-color: gray;
     color: white;
 }
 
 .permission_row {
     padding: 1em;
+}
+
+.cog-button-css {
+    padding: 0.4em;
+    margin-left: 0.5em;
+}
+
+.perm_group_info {
+    margin-right: 0.5em;
 }

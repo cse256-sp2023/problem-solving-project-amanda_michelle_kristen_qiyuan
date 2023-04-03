@@ -1,3 +1,13 @@
+// hardcoded in, maybe can find a way to do this through functions
+var permission_groups = { 
+    Read : '<br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; read permissions', 
+    Write : '<br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022;  write attributes <br> &#x2022; write extended attributes',
+    Read_Execute : '<br> &#x2022; traverse folder/execute file <br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; read permissions' ,
+    Modify : '<br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022; write attributes <br> &#x2022; write extended attributes <br> &#x2022; delete subfolders and files <br> &#x2022; delete' ,
+    Full_control : '<br> &#x2022; traverse folder/execute file <br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022; write attributes <br> &#x2022; write extended attributes <br> &#x2022; delete subfolders and files <br> &#x2022; delete <br> &#x2022; read permissions <br> &#x2022; change permissions <br> &#x2022; take ownership' , 
+    Special_permissions: '<br> &#x2022; permission settings that do not fall into any of the above groups'
+}
+
 // ---- Define your dialogs and panels here ----
 // sidepanel setup
 let panel = define_new_effective_permissions("panel_id", add_info_col = true)
@@ -10,9 +20,9 @@ $('#sidepanel').append(user_sel)
 $('#sidepanel').append(panel)
 
 // dialog box for info icon
-let dialog = define_new_dialog("dialog_id", title='Permission Info')
+let single_perm_dialog = define_new_dialog("perm_dialog_id", title='Permission Info')
 $('.perm_info').click(function(){
-    $('#dialog_id').dialog('open')
+    $('#perm_dialog_id').dialog('open')
 
     file_obj = path_to_file[$('#panel_id').attr('filepath')]
     user_obj = all_users[$('#panel_id').attr('username')]
@@ -20,9 +30,19 @@ $('.perm_info').click(function(){
 
     let explanation_obj = allow_user_action(file_obj, user_obj, perm_name, explain_why = true)
     let explanation_text = get_explanation_text(explanation_obj)
-    $('#dialog_id').text(explanation_text)
+    $('#perm_dialog_id').text(explanation_text)
 })
 
+// dialog box for permission group info icon
+let group_dialog = define_new_dialog("group_dialog_id", title='Permission Group Info')
+$('.perm_group_info').click(function(){
+    $('#group_dialog_id').dialog('open')
+
+    let group_name = $(this).attr('permission_group')
+    let group_text = "Permissions included in " + group_name + " are: " + permission_groups[group_name]
+
+    $('#group_dialog_id').html(group_text)
+})
 
 // ---- Display file structure ----
 
@@ -34,9 +54,8 @@ function make_file_element(file_obj) {
         let folder_elem = $(`<div class='folder' id="${file_hash}_div">
             <h3 class="selection" id="${file_hash}_header">
                 <span class="oi oi-folder" id="${file_hash}_icon"/> ${file_obj.filename} 
-                <button class="ui-button ui-widget ui-corner-all permbutton" path="${file_hash}" id="${file_hash}_permbutton"> 
-                    <span class="oi oi-lock-unlocked" id="${file_hash}_permicon"/>
-                    Edit Permission
+                <button class="ui-button ui-widget ui-corner-all permbutton cog-button-css" path="${file_hash}" id="${file_hash}_permbutton"> 
+                    <span class="oi oi-cog" id="${file_hash}_permicon"/>
                 </button>
             </h3>
         </div>`)
@@ -55,9 +74,8 @@ function make_file_element(file_obj) {
     else {
         return $(`<div class='file selection'  id="${file_hash}_div">
             <span class="oi oi-file" id="${file_hash}_icon"/> ${file_obj.filename}
-            <button class="ui-button ui-widget ui-corner-all permbutton" path="${file_hash}" id="${file_hash}_permbutton"> 
-                <span class="oi oi-lock-unlocked" id="${file_hash}_permicon"/>
-                Edit Permission
+            <button class="ui-button ui-widget ui-corner-all permbutton cog-button-css" path="${file_hash}" id="${file_hash}_permbutton"> 
+                <span class="oi oi-cog" id="${file_hash}_permicon"/>
             </button>
         </div>`)
     }

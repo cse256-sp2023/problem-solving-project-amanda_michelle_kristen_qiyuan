@@ -5,7 +5,7 @@ show_starter_dialogs = false // set this to "false" to disable the survey and 3-
 
 // --- Create all the elements, and connect them as needed: ---
 // Make permissions dialog:
-perm_dialog = define_new_dialog('permdialog', title='Permissions', options = {
+perm_dialog = define_new_dialog('permdialog', title='Permission Settings', options = {
     // The following are standard jquery-ui options. See https://jqueryui.com/dialog/
     height: 500,
     width: 400,
@@ -18,7 +18,7 @@ perm_dialog = define_new_dialog('permdialog', title='Permissions', options = {
             }
         },
         Advanced: {
-            text: "Advanced Permission Settings",
+            text: "Advanced Settings",
             id: "perm-dialog-advanced-button",
             click: function() {
                 open_advanced_dialog(perm_dialog.attr('filepath'))
@@ -48,7 +48,7 @@ file_permission_users.css({
 })
 
 // Make button to add a new user to the list:
-perm_add_user_select = define_new_user_select_field('perm_add_user', 'Add User to Permission', on_user_change = function(selected_user){
+perm_add_user_select = define_new_user_select_field('perm_add_user', 'Add User', on_user_change = function(selected_user){
     let filepath = perm_dialog.attr('filepath')
     if(selected_user && (selected_user.length > 0) && (selected_user in all_users)) { // sanity check that a user is actually selected (and exists)
         let expected_user_elem_id = `permdialog_file_user_${selected_user}`
