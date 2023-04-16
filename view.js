@@ -18,6 +18,8 @@ let user_sel = define_new_user_select_field("user_id", "Select User", on_user_ch
 
 $('#sidepanel').append(user_sel)
 $('#sidepanel').append(panel)
+//add label to the setting button
+$('.permbutton').append('View/Edit Permission')
 
 // dialog box for info icon
 let single_perm_dialog = define_new_dialog("perm_dialog_id", title='Permission Info')
@@ -124,3 +126,54 @@ $('.permbutton').click( function( e ) {
 
 // ---- Assign unique ids to everything that doesn't have an ID ----
 $('#html-loc').find('*').uniqueId() 
+
+//creating confirmaton pop up window when user change permissions
+function myFunction() {
+    var result = confirm("Are you sure you want to do this?");
+    if (result == true) {
+      // User clicked OK
+      console.log("pressed ok")
+    } else {
+      // User clicked Cancel or closed the dialog
+      console.log("pressed cancel")
+    }
+}
+
+// Define the dialog box - view_baseline line 472 User Dialog
+// let user_select_contents = $("#user_select_dialog").dialog({
+//     height: 450,
+//     width: 400,
+//     modal: true,
+//     autoOpen: false,
+//     appendTo: "#html-loc",
+//     position: { my: "top", at: "top", of: $('#html-loc') },
+//     buttons: {
+//       Cancel: {
+//         text: "Cancel",
+//         id: "user-select-cancel-button",
+//         click: function() {
+//           $(this).dialog("close");
+//         }
+//       },
+//       Confirm: {
+//         text: "Confirm",
+//         id: "user-select-confirm-button",
+//         click: function() {
+//           let to_populate_id = $(this).attr('to_populate');
+//           let selected_value = $(this).attr('username');
+//           let confirmation = confirm("Are you sure you want to make this change?");
+//           if (confirmation) {
+//             $(`#${to_populate_id}`).text(selected_value);
+//             $(`#${to_populate_id}`).attr('selected_user', selected_value);
+//             $(this).dialog("close");
+//           }
+//         }
+//       }
+//     }
+//   });
+  
+//   // Add event listener to button
+//   $('#open-dialog-button').on('click', function() {
+//     user_select_contents.dialog('open');
+//   });
+  
