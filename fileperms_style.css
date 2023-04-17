@@ -37,6 +37,7 @@
 }
 
 /* Added css */
+/* for path selection and file system */
 #path_info {
     padding: 0.25em;
     background-color: #007fff;
@@ -59,4 +60,16 @@
 
 .perm_group_info {
     margin-right: 0.5em;
+}
+
+/* general settings */
+#user_list_for_group, #special_perm_group_dialog {
+    font-style: italic;
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+/* current does not work vv, supposed to change the disabled checkbox color */
+input[type="checkbox"]:disabled {
+    background-color: gray;
 }

@@ -33,7 +33,7 @@ function define_attribute_observer(watched_elem_selector, watched_attribute, on_
 // and also adds any attributes you pass along
 function make_user_elem(id_prefix, uname, user_attributes=null) {
     user_elem = $(`<div class="ui-widget-content" id="${id_prefix}_${uname}" name="${uname}">
-        <span id="${id_prefix}_${uname}_icon" class="oi ${is_user(all_users[uname])?'oi-person':'oi-people'}"/> 
+        <span id="${id_prefix}_${uname}_icon" class="oi ${is_user(all_users[uname])?'oi-person':'oi-grid-two-up'}"></span>
         <span id="${id_prefix}_${uname}_text">${uname} </span>
     </div>`)
 
@@ -161,6 +161,7 @@ function define_new_effective_permissions(id_prefix, add_info_col = false, which
     if(which_permissions === null) {
         which_permissions = Object.values(permissions)
     }
+
     // add a row for each permission:
     for(let p of which_permissions) {
         let p_id = p.replace(/[ \/]/g, '_') //get jquery-readable id
@@ -202,7 +203,7 @@ function define_new_effective_permissions(id_prefix, add_info_col = false, which
             for(let p of which_permissions) {
                 let p_id = p.replace(/[ \/]/g, '_') //get jquery-readable id
                 // if the actual model would allow an action with permission
-                if( allow_user_action(path_to_file[filepath], all_users[username], p)) {
+                if(allow_user_action(path_to_file[filepath], all_users[username], p)) {
                     // This action is allowed. Find the checkbox cell and put a checkbox there.
                     let this_checkcell = effective_container.find(`#${id_prefix}_checkcell_${p_id}`)
                     this_checkcell.append(`<span id="${id_prefix}_checkbox_${p_id}" class="oi oi-check"/>`)
@@ -230,12 +231,17 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
             <th id="${id_prefix}_header_allow">Allow</th>
             <th id="${id_prefix}_header_deny">Deny</th>
         </tr>
+        <tr id="${id_prefix}_user_list_for_group">
+            <th id="user_list_for_group" width="99%">
+            </th>
+        </tr>
     </table>
     `)
 
     if(which_groups === null) {
         which_groups = perm_groupnames
     }
+
     // For each permissions group, create a row:
     for(let g of which_groups){
         let row = $(`<tr id="${id_prefix}_row_${g}">
@@ -250,7 +256,6 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
         }
         group_table.append(row)
     }  
-
 
     group_table.find('.groupcheckbox').prop('disabled', true)// disable all checkboxes to start
 
@@ -271,30 +276,39 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
 
             // change name on table:
             $(`#${id_prefix}_header_username`).text(username)
+            
+            // displays users in a group:
+            if(!is_user(all_users[username])) {  // if group
+                $(`#user_list_for_group`).text(get_users_in_group(all_users[username]))
+            } else {
+                $(`#user_list_for_group`).text('')
+            }
 
             // get new grouped permissions:
             let grouped_perms = get_grouped_permissions(path_to_file[filepath], username)
 
             for( ace_type in grouped_perms) { // 'allow' and 'deny'
-                for(allowed_group in grouped_perms[ace_type]) {
+                for(allowed_group in grouped_perms[ace_type]) { // allowed permission groups
                     let checkbox = group_table.find(`#${id_prefix}_${allowed_group}_${ace_type}_checkbox`)
                     checkbox.prop('checked', true)
                     if(grouped_perms[ace_type][allowed_group].inherited) {
                         // can't uncheck inherited permissions.
                         checkbox.prop('disabled', true)
                     }
-
                 }
             } 
+            update_special_permission_dialog(path_to_file[filepath], username, allowed_group)
         }
         else {
             // can't get permissions for this username/filepath - reset everything into a blank state
             group_table.find('.groupcheckbox').prop('disabled', true)
             group_table.find('.groupcheckbox').prop('checked', false)
             $(`#${id_prefix}_header_username`).text('')
+            $(`#user_list_for_group`).text('')
+            permission_groups_list['Special_permissions'] = '<br> &#x2022; permissions that do not form any of the above permission groups (choose a user to see specifics)'
         }
-
     }
+
     define_attribute_observer(group_table, 'username', update_group_checkboxes)
     define_attribute_observer(group_table, 'filepath', update_group_checkboxes)
 
@@ -305,6 +319,38 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
     })
 
     return group_table
+}
+
+// lists out the users in a group (string), takes a group object as a parameter
+function get_users_in_group(group) {
+    let text = "Group includes "
+    for(user in group.users) {
+        text = text + group.users[user] + ', '
+    }
+
+    // deletes the comma at the end of sentence
+    var full_text = text.slice(0, -2);
+
+    return full_text
+}
+
+// updates the list of all the special permissions for a user and filepath (for group icon dialog)
+function update_special_permission_dialog(file_obj, user) {
+    let special_permissions = get_special_permissions(file_obj, user)
+    let permissions_text = ''
+
+    for (let ace_type in special_permissions) { // 'allow' and 'deny'
+        permissions_text = permissions_text + '<br><b>' + ace_type + '</b>:'
+
+        if(Object.keys(special_permissions[ace_type]).length > 0) {
+            for (let permission in special_permissions[ace_type]) {
+                permissions_text = permissions_text + ' <br> &#x2022; ' + permission
+            }
+        } 
+    }
+    permissions_text = permissions_text + '<br><i id="special_perm_group_dialog">These permissions do not form any of the above groups</i>'
+
+    permission_groups_list['Special_permissions'] = permissions_text
 }
 
 // define an element which will display *individual* permissions for a given file and user, and allow for changing them by checking/unchecking the checkboxes.

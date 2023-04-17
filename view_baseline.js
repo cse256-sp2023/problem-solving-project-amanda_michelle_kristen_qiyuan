@@ -15,6 +15,10 @@ perm_dialog = define_new_dialog('permdialog', title='Permission Settings', optio
             id: "perm-dialog-ok-button",
             click: function() {
                 $( this ).dialog( "close" );
+                // resetting ui
+                $(`#user_list_for_group`).text('')
+                permission_groups_list['Special_permissions'] = '<br> &#x2022; permissions that do not form any of the above permission groups (choose a user to see specifics)'
+                $('#panel_id').attr('filepath', $(`#permdialog`).attr('filepath'))
             }
         },
         Advanced: {
@@ -32,7 +36,7 @@ perm_dialog = define_new_dialog('permdialog', title='Permission Settings', optio
 obj_name_div = $('<div id="permdialog_objname" class="section">Object Name: <span id="permdialog_objname_namespan"></span> </div>')
 
 //Make the div with the explanation about special permissions/advanced settings:
-advanced_expl_div = $('<div id="permdialog_advanced_explantion_text">For special permissions or advanced settings, click Advanced.</div>')
+advanced_expl_div = $('<div id="permdialog_advanced_explantion_text">To change settings such as special permissions or inheritance, click on Advanced Settings.</div>')
 
 // Make the (grouped) permission checkboxes table:
 grouped_permissions = define_grouped_permission_checkboxes('permdialog_grouped_permissions')
@@ -182,7 +186,7 @@ function make_all_users_list(id_prefix, attr_set_id, height=80) {
         let user = all_users[username]
         all_user_list.append(
             `<div class="ui-widget-content" id="${id_prefix}_${username}" username="${username}">
-                <span id="${id_prefix}_${username}_icon" class="oi ${is_user(user)?'oi-person':'oi-people'}"/> 
+                <span id="${id_prefix}_${username}_icon" class="oi ${is_user(user)?'oi-person':'oi-grid-two-up'}"/> 
                 ${username}
             </div>`)
     }

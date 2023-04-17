@@ -300,6 +300,7 @@ function get_grouped_permissions(file_obj, username) {
     for (let ace_type in total_permissions) {
         let need_special = false;
         let special_inherited = false;
+
         for (let perm in total_permissions[ace_type]) {
             if (!total_permissions[ace_type][perm].used) {
                 need_special = true;
@@ -317,6 +318,49 @@ function get_grouped_permissions(file_obj, username) {
     }
 
     return grouped_permissions;
+}
+
+// Get special permission info (based on grouped permission function above)
+function get_special_permissions(file_obj, username) {
+    let special_permissions = {
+        allow: {},
+        deny: {},
+    };
+
+    // need this part for checking permissions
+    let total_permissions = get_total_permissions(file_obj, username);
+    for (let ace_type in special_permissions) { // 'allow' and 'deny'
+        for (let groupname in permission_groups) {
+            // if any of the permission listed in that group are not listed in the total permissions, then we will not check the checkbox for that group.
+            let should_check = true;
+            let has_inherited = false;
+            for (let perm of permission_groups[groupname]) {
+                if (!total_permissions[ace_type][perm]) {
+                    should_check = false;
+                } else if (total_permissions[ace_type][perm].inherited) {
+                    has_inherited = true;
+                }
+            }
+            if (should_check) {
+                // if we've checked the box, mark each permission in this group as "used" for some permission group - if there are any "unused" permissions, then we will check "special permissions"
+                for (let perm of permission_groups[groupname]) {
+                    total_permissions[ace_type][perm].used = true;
+                }
+            }
+        }
+    }
+
+    // check for "special permissions" and add them to the dictionary
+    for (let ace_type in total_permissions) {
+        for (let perm in total_permissions[ace_type]) {
+            if (!total_permissions[ace_type][perm].used) {
+                special_permissions[ace_type][perm] = {
+                };
+            }
+        }
+    }
+
+    return special_permissions;
 }
 
 function convert_parent_permissions(file_obj) {

@@ -1,11 +1,11 @@
 // hardcoded in, maybe can find a way to do this through functions
-var permission_groups = { 
+var permission_groups_list = { 
     Read : '<br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; read permissions', 
     Write : '<br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022;  write attributes <br> &#x2022; write extended attributes',
     Read_Execute : '<br> &#x2022; traverse folder/execute file <br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; read permissions' ,
     Modify : '<br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022; write attributes <br> &#x2022; write extended attributes <br> &#x2022; delete subfolders and files <br> &#x2022; delete' ,
     Full_control : '<br> &#x2022; traverse folder/execute file <br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022; write attributes <br> &#x2022; write extended attributes <br> &#x2022; delete subfolders and files <br> &#x2022; delete <br> &#x2022; read permissions <br> &#x2022; change permissions <br> &#x2022; take ownership' , 
-    Special_permissions: '<br> &#x2022; permission settings that do not fall into any of the above groups'
+    Special_permissions: '<br> &#x2022; permissions that are not set using one of the above permission groups (choose a user to see specifics)'
 }
 
 // ---- Define your dialogs and panels here ----
@@ -41,7 +41,7 @@ $('.perm_group_info').click(function(){
     $('#group_dialog_id').dialog('open')
 
     let group_name = $(this).attr('permission_group')
-    let group_text = "Permissions included in " + group_name + " are: " + permission_groups[group_name]
+    let group_text = "Permissions included in " + group_name + " are: " + permission_groups_list[group_name]
 
     $('#group_dialog_id').html(group_text)
 })
@@ -88,6 +88,7 @@ for(let root_file of root_files) {
     $( "#filestructure" ).append( file_elem);    
 }
 
+// highlights selected path and sets path variable
 let $cols = $('.selection').click(function(e) {
     $cols.removeClass('selected')
     $(this).addClass('selected')

@@ -75,8 +75,13 @@ function ace_applies(user, ace) {
     return user === ace.who
   }
   else {
-    // not a string - assume this is a group.
-    return ace.who.users.includes(user)
+    // cannot assume group if not a string, check if user is a group
+    if(is_user(user)){ //true is user
+      return ace.who.users.includes(user)
+    } else {
+      // edited so that groups also showed permissions on the side panel
+      return user.name === ace.who['name']
+    }
   }
 }
 
@@ -103,6 +108,7 @@ if explain_why is true, returns an object which contains information about why t
 function allow_user_action(file, user, permission_to_check, explain_why = false){
   // first, check for "special" built-in permissions:
   // If user is owner or admin, they can always change permissons, read permissions, and take ownership of the file.
+
   if ( [permissions.CHANGE_PERMS, permissions.TAKE_OWNERSHIP, permissions.READ_PERMS].includes(permission_to_check)  && 
       (file.owner === user || admin_group.users.includes(user)) ) {
         return make_allow_return_value(true, file, null, explain_why,'This user is the file owner or an administrator') 
