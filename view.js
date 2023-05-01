@@ -2,6 +2,7 @@
 var permission_groups_list = { 
     Read : '<br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; read permissions', 
     Write : '<br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022;  write attributes <br> &#x2022; write extended attributes',
+    Delete: '<br> &#x2022; delete subfolders and files <br> &#x2022; delete',
     Read_Execute : '<br> &#x2022; traverse folder/execute file <br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; read permissions' ,
     Modify : '<br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022; write attributes <br> &#x2022; write extended attributes <br> &#x2022; delete subfolders and files <br> &#x2022; delete' ,
     Full_control : '<br> &#x2022; traverse folder/execute file <br> &#x2022; list folder/read contents <br> &#x2022; read attributes <br> &#x2022; read extended attributes <br> &#x2022; create files/write data <br> &#x2022; create folders/append data <br> &#x2022; write attributes <br> &#x2022; write extended attributes <br> &#x2022; delete subfolders and files <br> &#x2022; delete <br> &#x2022; read permissions <br> &#x2022; change permissions <br> &#x2022; take ownership' , 
@@ -32,7 +33,10 @@ $('.perm_info').click(function(){
 
     let explanation_obj = allow_user_action(file_obj, user_obj, perm_name, explain_why = true)
     let explanation_text = get_explanation_text(explanation_obj)
-    $('#perm_dialog_id').text(explanation_text)
+
+    let text = '<b>' + perm_name + '</b><br>' + explanation_text // put permission name at top
+
+    $('#perm_dialog_id').html(text)
 })
 
 // dialog box for permission group info icon

@@ -41,6 +41,10 @@ permission_groups = {
         permissions.WRITE_ATTR,
         permissions.WRITE_EXTENDED_ATTR,
     ],
+    Delete: [
+        permissions.DELETE, 
+        permissions.DELETE_SUB,
+    ],
     Read_Execute: [
         permissions.LIST,
         permissions.READ_ATTR,
@@ -78,8 +82,6 @@ perm_groupnames.push('Special_permissions');
 
 // Extra permission groups (this way Read, Write, Delete, Other make up the whole set; and are disjoint)
 // TODO/commit when??: WRITE_DATA should actually be in Write, also. [not in Other]
-
-// commented out so delete perms are listed as special in the basic settings
 
 // permission_groups['Delete'] = [permissions.DELETE, permissions.DELETE_SUB];
 // permission_groups['Other'] = [

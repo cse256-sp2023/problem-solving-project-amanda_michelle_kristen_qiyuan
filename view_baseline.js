@@ -7,7 +7,7 @@ show_starter_dialogs = false // set this to "false" to disable the survey and 3-
 // Make permissions dialog:
 perm_dialog = define_new_dialog('permdialog', title='Permission Settings', options = {
     // The following are standard jquery-ui options. See https://jqueryui.com/dialog/
-    height: 575,
+    height: 590,
     width: 400,
     buttons: {
         OK:{
@@ -34,10 +34,11 @@ perm_dialog = define_new_dialog('permdialog', title='Permission Settings', optio
 // Make the initial "Object Name:" text:
 // If you pass in valid HTML to $(), it will *create* elements instead of selecting them. (You still have to append them, though)
 obj_name_div = $('<div id="permdialog_objname" class="section">Object Name: <span id="permdialog_objname_namespan"></span> </div>')
-// 
+
+// Make the div with the explanation about the grey checkbox:
 grey_checkbox_expl_div = $('<div id="grey_checkbox_explanation_text">If there is a <input type="checkbox"checked=true disabled=true></input>, these permission settings were set from a group or inheritance, or they are special permissions. Additionally, Deny settings take precedence over Allow.</div> <br>')
 
-//Make the div with the explanation about special permissions/advanced settings:
+// Make the div with the explanation about special permissions/advanced settings:
 advanced_expl_div = $('<div id="permdialog_advanced_explantion_text">To change settings such as special permissions or inheritance, click on Advanced Settings.</div>')
 
 // Make the (grouped) permission checkboxes table:

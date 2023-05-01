@@ -207,6 +207,12 @@ function define_new_effective_permissions(id_prefix, add_info_col = false, which
                     // This action is allowed. Find the checkbox cell and put a checkbox there.
                     let this_checkcell = effective_container.find(`#${id_prefix}_checkcell_${p_id}`)
                     this_checkcell.append(`<span id="${id_prefix}_checkbox_${p_id}" class="oi oi-check"/>`)
+                } else {
+                    // This action is denied. 
+                    if(allow_user_action(path_to_file[filepath], all_users[username], p, true).text_explanation == null) {
+                        let this_checkcell = effective_container.find(`#${id_prefix}_checkcell_${p_id}`)
+                        this_checkcell.append(`<span id="${id_prefix}_checkbox_${p_id}" class="oi oi-x"/>`)
+                    }  
                 }
             }
         }
@@ -620,13 +626,20 @@ function define_new_user_select_field(id_prefix, select_button_text, on_user_cha
 
 // Get a (very simple) text representation of a permissions explanation
 function get_explanation_text(explanation) {
-    return `
-    Action allowed?: ${explanation.is_allowed}; 
-    Because of
-    permission set for file: ${explanation.file_responsible?get_full_path(explanation.file_responsible):'N/A'}
-    and for user: ${ explanation.ace_responsible ? get_user_name(explanation.ace_responsible.who) : 'N/A' }
-    ${ explanation.text_explanation ? `(${explanation.text_explanation})`  : '' }
-    `
+    let path = explanation.file_responsible ? get_full_path(explanation.file_responsible) : 'N/A'
+    let user = explanation.ace_responsible ? get_user_name(explanation.ace_responsible.who) : 'N/A'
+    let expl = explanation.text_explanation ? `(${explanation.text_explanation})`  : ''
+
+    let text = '&#x2022; <b>Is action allowed?</b>: ' + explanation.is_allowed + '<br> &#x2022; <b>Permission set for file:</b> ' + path + '<br> &#x2022; <b>Permission set by:</b> ' + user + '<br><i>' + expl + '</i>'
+
+    return text
+    // return `
+    // Action allowed?: ${explanation.is_allowed};
+    // Because of
+    // permission set for file: ${explanation.file_responsible?get_full_path(explanation.file_responsible):'N/A'}
+    // and for user: ${ explanation.ace_responsible ? get_user_name(explanation.ace_responsible.who) : 'N/A' }
+    // ${ explanation.text_explanation ? `(${explanation.text_explanation})`  : '' }
+    // `
 }
 
 //---- some universal HTML set-up so you don't have to do it in each wrapper.html ----
