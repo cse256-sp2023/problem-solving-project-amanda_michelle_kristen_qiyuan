@@ -265,6 +265,8 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
         // get current settings:
         let username = group_table.attr('username')
         let filepath = group_table.attr('filepath')
+        let in_groups = []
+
         // if both properties are set correctly:
         if( username && username.length > 0 && (username in all_users) &&
             filepath && filepath.length > 0 && (filepath in path_to_file)) {
@@ -277,17 +279,18 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
             // change name on table:
             $(`#${id_prefix}_header_username`).text(username)
             
-            // displays users in a group:
+            // displays users in a group or groups a user is in
             if(!is_user(all_users[username])) {  // if group
                 $(`#user_list_for_group`).text(get_users_in_group(all_users[username]))
             } else {
-                $(`#user_list_for_group`).text('')
+                $(`#user_list_for_group`).text(get_groups_for_user(all_users[username]))
+                in_groups = check_is_user_is_in_group(all_users[username])
             }
 
             // get new grouped permissions:
             let grouped_perms = get_grouped_permissions(path_to_file[filepath], username)
 
-            for( ace_type in grouped_perms) { // 'allow' and 'deny'
+            for(ace_type in grouped_perms) { // 'allow' and 'deny'
                 for(allowed_group in grouped_perms[ace_type]) { // allowed permission groups
                     let checkbox = group_table.find(`#${id_prefix}_${allowed_group}_${ace_type}_checkbox`)
                     checkbox.prop('checked', true)
@@ -297,6 +300,22 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
                     }
                 }
             } 
+            
+            // get grouped permissions for groups that the user is in, disables them so they have to change through group
+            if(in_groups.length > 0) {
+                for(groupname in in_groups) {
+                    let group_grouped_perms = get_grouped_permissions(path_to_file[filepath], in_groups[groupname])
+
+                    for(ace_type in group_grouped_perms) { // 'allow' and 'deny'
+                        for(allowed_group in group_grouped_perms[ace_type]) { // allowed permission groups
+                            let checkbox = group_table.find(`#${id_prefix}_${allowed_group}_${ace_type}_checkbox`)
+                            checkbox.prop('checked', true)
+                            checkbox.prop('disabled', true)
+                        }
+                    } 
+                }
+            }
+
             update_special_permission_dialog(path_to_file[filepath], username, allowed_group)
         }
         else {
@@ -332,6 +351,42 @@ function get_users_in_group(group) {
     var full_text = text.slice(0, -2);
 
     return full_text
+}
+
+// checks what groups a user is in, then puts them into a list
+function check_is_user_is_in_group(username) {
+    let groups = []
+
+    // iterate through all users, if it is a group check if the user is in it
+    for(entry in all_users) {
+        let group = all_users[entry]
+        if(!is_user(group)) {  // if group
+            for(user in group.users) {            
+                if(username == group.users[user]) {
+                    groups.push(group.name)
+                }       
+            }
+        }
+    }
+
+    return groups
+}
+
+// lists out the groups a user is in (string), takes a user object as a parameter
+function get_groups_for_user(username) {
+    let groups = check_is_user_is_in_group(username)
+    let text = ""
+
+    // if in no groups, then text is empty; otherwise iterate over groups
+    if(groups.length > 0) {
+        text = "Has permissions from group(s): "
+        for(groupname in groups) {
+            text = text + groups[groupname] + ', '
+        }
+        text = text.slice(0, -2) // to get rid of comma at the end
+    } 
+
+    return text
 }
 
 // updates the list of all the special permissions for a user and filepath (for group icon dialog)

@@ -46,6 +46,16 @@ $('.perm_group_info').click(function(){
     $('#group_dialog_id').html(group_text)
 })
 
+// let change_dialog = define_new_dialog("change_dialog_id", title='Changed Permissions')
+// $('#perm-dialog-ok-button').click(function(){
+//     $('#change_dialog_id').dialog('open')
+
+//     // let group_name = $(this).attr('permission_group')
+//     // let group_text = "Permissions included in " + group_name + " are: " + permission_groups_list[group_name]
+
+//     // $('#group_dialog_id').html(group_text)
+// })
+
 // ---- Display file structure ----
 
 // (recursively) makes and returns an html element (wrapped in a jquery object) for a given file object

@@ -79,12 +79,14 @@ perm_groupnames.push('Special_permissions');
 // Extra permission groups (this way Read, Write, Delete, Other make up the whole set; and are disjoint)
 // TODO/commit when??: WRITE_DATA should actually be in Write, also. [not in Other]
 
-permission_groups['Delete'] = [permissions.DELETE, permissions.DELETE_SUB];
-permission_groups['Other'] = [
-    permissions.EXECUTE,
-    permissions.CHANGE_PERMS,
-    permissions.TAKE_OWNERSHIP,
-];
+// commented out so delete perms are listed as special in the basic settings
+
+// permission_groups['Delete'] = [permissions.DELETE, permissions.DELETE_SUB];
+// permission_groups['Other'] = [
+//     permissions.EXECUTE,
+//     permissions.CHANGE_PERMS,
+//     permissions.TAKE_OWNERSHIP,
+// ];
 
 // given a file object, generate the full path from root
 function get_full_path(file_obj) {

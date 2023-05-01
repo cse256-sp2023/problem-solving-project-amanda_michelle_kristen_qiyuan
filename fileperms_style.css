@@ -63,13 +63,13 @@
 }
 
 /* general settings */
-#user_list_for_group, #special_perm_group_dialog {
+#user_list_for_group, #special_perm_group_dialog, #grey_checkbox_explanation_text {
     font-style: italic;
     font-size: 0.8em;
     font-weight: normal;
 }
 
-/* current does not work vv, supposed to change the disabled checkbox color */
-input[type="checkbox"]:disabled {
+/* need to override user agent stylesheet */
+input[type="checkbox" i]:disabled {
     background-color: gray;
 }
