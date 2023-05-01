@@ -322,7 +322,7 @@ function define_grouped_permission_checkboxes(id_prefix, which_groups = null) {
                 }
             }
 
-            update_special_permission_dialog(path_to_file[filepath], username, allowed_group)
+            update_special_permission_dialog(path_to_file[filepath], username)
         }
         else {
             // can't get permissions for this username/filepath - reset everything into a blank state
