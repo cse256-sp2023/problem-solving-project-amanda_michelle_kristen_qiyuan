@@ -208,7 +208,7 @@ function define_new_effective_permissions(id_prefix, add_info_col = false, which
                     let this_checkcell = effective_container.find(`#${id_prefix}_checkcell_${p_id}`)
                     this_checkcell.append(`<span id="${id_prefix}_checkbox_${p_id}" class="oi oi-check"/>`)
                 } else {
-                    // This action is denied. 
+                    // This action is denied. Find the checkbox cell and put a cross(x) there.
                     if(allow_user_action(path_to_file[filepath], all_users[username], p, true).text_explanation == null) {
                         let this_checkcell = effective_container.find(`#${id_prefix}_checkcell_${p_id}`)
                         this_checkcell.append(`<span id="${id_prefix}_checkbox_${p_id}" class="oi oi-x"/>`)

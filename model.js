@@ -73,16 +73,20 @@ function ace_applies(user, ace) {
   if( typeof (ace.who) === 'string') {
     // a string - assume this is a single user
     return user === ace.who
+  } else {
+    // not a string - assume this is a group.
+    return ace.who.users.includes(user)
   }
-  else {
-    // cannot assume group if not a string, check if user is a group
-    if(is_user(user)){ //true is user
-      return ace.who.users.includes(user)
-    } else {
-      // edited so that groups also showed permissions on the side panel
-      return user.name === ace.who['name']
-    }
-  }
+  // version below displays permissions for groups in the side panel, but it breaks the solution checking code
+  // else {
+  //   // cannot assume group if not a string, check if user is a group
+  //   if(is_user(user)){ //true is user
+  //     return ace.who.users.includes(user)
+  //   } else {
+  //     // edited so that groups also showed permissions on the side panel
+  //     return user.name === ace.who['name']
+  //   }
+  // }
 }
 
 /*

@@ -84,11 +84,11 @@ perm_groupnames.push('Special_permissions');
 // TODO/commit when??: WRITE_DATA should actually be in Write, also. [not in Other]
 
 // permission_groups['Delete'] = [permissions.DELETE, permissions.DELETE_SUB];
-// permission_groups['Other'] = [
-//     permissions.EXECUTE,
-//     permissions.CHANGE_PERMS,
-//     permissions.TAKE_OWNERSHIP,
-// ];
+permission_groups['Other'] = [
+    permissions.EXECUTE,
+    permissions.CHANGE_PERMS,
+    permissions.TAKE_OWNERSHIP,
+];
 
 // given a file object, generate the full path from root
 function get_full_path(file_obj) {
